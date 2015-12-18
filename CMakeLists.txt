@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+project( PDA )
+find_package( OpenCV REQUIRED )
+add_executable( PDA PDA_PDI.cpp )
+target_link_libraries( PDA ${OpenCV_LIBS} )
