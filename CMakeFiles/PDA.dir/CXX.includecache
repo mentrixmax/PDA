@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/mateus/Área de Trabalho/PDA_PDI/PDA_PDI.cpp
+opencv2/core/core.hpp
+/home/mateus/Área de Trabalho/PDA_PDI/opencv2/core/core.hpp
+opencv2/core/types_c.h
+/home/mateus/Área de Trabalho/PDA_PDI/opencv2/core/types_c.h
+opencv2/highgui/highgui.hpp
+/home/mateus/Área de Trabalho/PDA_PDI/opencv2/highgui/highgui.hpp
+opencv2/imgproc/imgproc.hpp
+/home/mateus/Área de Trabalho/PDA_PDI/opencv2/imgproc/imgproc.hpp
+opencv2/imgproc/imgproc_c.h
+/home/mateus/Área de Trabalho/PDA_PDI/opencv2/imgproc/imgproc_c.h
+opencv2/imgproc/imgproc.hpp
+/home/mateus/Área de Trabalho/PDA_PDI/opencv2/imgproc/imgproc.hpp
+sys/time.h
+-
+iostream
+/home/mateus/Área de Trabalho/PDA_PDI/iostream
+stdio.h
+-
+
