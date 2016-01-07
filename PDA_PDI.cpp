@@ -7,6 +7,7 @@
 #include <sys/time.h>
 #include "iostream"
 #include <stdio.h>
+#include <string.h>
 
 using namespace cv;
 using namespace std;
@@ -37,50 +38,27 @@ Mat brilhoNovo(Mat &mat, int valor) {
 	return new_image;
 }
 
-void filtroMateus(Mat &src) {
+void filtroMateus(Mat &src, string fileout) {
 	Mat imageFinal = src;
 	Mat image = src;
 	struct timeval inicio, fim;
 	gettimeofday(&inicio, NULL);
 	Mat saida = Mat::zeros(image.size(), image.type());
 	image = brilhoNovo(image, -10);
-	saida = image;
-	medianBlur(image, saida, 9);
-	for (int i = 0; i < 5; i++) {
-		medianBlur(saida, saida, 9);
-	}
-
-	IplImage* imgPosMedia = new IplImage(saida);
-
+	cvtColor(image, image, COLOR_BGR2GRAY);
+        
+	blur(image, saida, cv::Size(9,9));
 	cv::threshold(saida, saida, 90, 255, THRESH_BINARY);
-
-	color = new IplImage(saida);
-	Mat imageGrayScale;
-	Mat imageBinary;
-	cvtColor(image, imageGrayScale, COLOR_BGR2GRAY);
-	cinza = cvCreateImage(cvGetSize(color), 8, 1);
-	regiao = cvCreateImage(cvGetSize(color), 8, 1);
-	canal = (uchar*) cinza->imageData;
-	canal2 = (uchar*) regiao->imageData;
-	cvCvtColor(color, cinza, COLOR_BGR2GRAY);
-
-	cv::Mat m = cv::cvarrToMat(cinza);
+        
+	cv::Mat m = saida;
 
 	Mat imagemProcessada = Mat::zeros(m.size(), m.type());
-	;
-	for (int i = 0; i <= m.size().height - 1; i++) {
-		for (int j = 0; j <= m.size().width - 1; j++) {
-			if (m.at<char>(i, j) < (char) 253 || m.at<char>(i, j) > (char) 50) {
-				imagemProcessada.at<char>(i, j) = 255;
-			}
-		}
-	}
-
+        imagemProcessada = saida;
 	vector<Point> data;
 	//pecorrendo todos os pontos da imagem detectado a parte de cima!
 	for (int col = imagemProcessada.cols - 1; col > 0; col--) {
 		for (int lin = 0; lin < imagemProcessada.rows; lin++) {
-			if (imagemProcessada.at<char>(lin, col) == (char) 255) {
+			if (imagemProcessada.at<char>(lin, col) == (char) 0) {
 				Point p;
 				p.x = col;
 				p.y = lin;
@@ -89,66 +67,38 @@ void filtroMateus(Mat &src) {
 			}
 		}
 	}
-	/*
-	vector<Point> dataB;
-	for (int colunas = 0; colunas < imagemProcessada.cols - 1; colunas++) {
-		for (int linhas = imagemProcessada.rows - 1; linhas > 0; linhas--) {
-			if (imagemProcessada.at<char>(linhas, colunas) == (char) 255) {
-				Point p;
-				p.x = colunas;
-				p.y = linhas;
-				dataB.push_back(p);
-				break;
-			}
-		}
-	}
-
-	Mat pontosMaximo = Mat::zeros(imagemProcessada.size(),
-			imagemProcessada.type());
-	int k = 0;
-
-		while ( k <dataB.size())
-	 {
-	 circle(	imageFinal, dataB.at(k),3,Scalar(255,255,255),1,8,0);
-	 k++;
-	 }*/
-
+	
+	gettimeofday(&fim, NULL);
 	int k = 0;
 	while (k < data.size()) {
-		circle(imageFinal, data.at(k), 3, Scalar(255, 255, 255), 1, 8, 0);
+		circle(imageFinal, data.at(k), 3, Scalar(255, 0, 0), 1, 8, 0);
 		k++;
 	}
 
-	namedWindow("maximos", CV_NORMAL);
-	imshow("maximos", imageFinal);
+	
 
-	gettimeofday(&fim, NULL);
 	int tmili = 0;
 	tmili = (int) (1000 * (fim.tv_sec - inicio.tv_sec)
 			+ ((fim.tv_usec - inicio.tv_usec) / 1000));
-	waitKey(0);
-	printf(" tempo decorrido em MS \n %d ", tmili);
-	waitKey(0);
+
+	imwrite( fileout, imageFinal );
+	printf(" tempo decorrido em MS %d  \n", tmili);
+
+}
+
+string itos(int i) // convert int to string
+{
+    stringstream s;
+    s << i;
+    return s.str();
 }
 int main(int argc, char** argv) {
-
-	/*	string filename = "VID_20151204_164043568.mp4";
-	 VideoCapture capture(filename);
-	 Mat frame;
-	 if( !capture.isOpened() )
-	 throw "Error when reading steam_avi";
-
-	 namedWindow( "w", 1);
-	 for( ; ; )
-	 {
-	 capture >> frame;
-	 //  if(!frame)
-	 //     break;
-	 filtroMateus(frame);
-	 imshow("w", frame);
-	 waitKey(80); // waits to display frame
-	 }
-	 waitKey(0);*/
-	Mat imageFinal = imread("IMG_20151204_163737043.jpg", 1);
-	filtroMateus(imageFinal);
+	for (int i=1; i<=55; i++) {
+	 std::string result = itos(i)+".jpg";
+	 std::string resultout = "/home/lamp/mateussaidas/"+itos(i)+"out.jpg";
+     std::cout << "" << result;
+	 Mat imageFinal = imread(result, 1);
+	 filtroMateus(imageFinal,resultout);
+	}
+	waitKey(0);
 }
